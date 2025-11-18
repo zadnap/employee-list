@@ -67,4 +67,44 @@ const deleteEmployee = async (req, res) => {
   }
 };
 
-module.exports = { renderEmployee, addEmployee, deleteEmployee };
+const updateEmployee = async (req, res) => {
+  try {
+    const {
+      employeeNumber,
+      firstName,
+      lastName,
+      jobTitle,
+      email,
+      extension,
+      officeCode,
+      reportsTo,
+    } = req.body;
+
+    if (!employeeNumber) {
+      return res.status(400).send('Invalid employee number');
+    }
+
+    await db.updateEmployee({
+      employeeNumber,
+      lastName,
+      firstName,
+      extension: extension || null,
+      email,
+      officeCode: officeCode || null,
+      reportsTo: reportsTo || null,
+      jobTitle,
+    });
+
+    res.redirect('/');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+};
+
+module.exports = {
+  renderEmployee,
+  addEmployee,
+  deleteEmployee,
+  updateEmployee,
+};

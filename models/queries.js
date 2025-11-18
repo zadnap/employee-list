@@ -111,6 +111,33 @@ const deleteEmployee = async (employeeNumber) => {
   }
 };
 
+const updateEmployee = async ({
+  employeeNumber,
+  lastName,
+  firstName,
+  extension,
+  email,
+  officeCode,
+  reportsTo,
+  jobTitle,
+}) => {
+  await pool.query(
+    `UPDATE employees
+     SET lastName = ?, firstName = ?, extension = ?, email = ?, officeCode = ?, reportsTo = ?, jobTitle = ?
+     WHERE employeeNumber = ?`,
+    [
+      lastName,
+      firstName,
+      extension,
+      email,
+      officeCode,
+      reportsTo,
+      jobTitle,
+      employeeNumber,
+    ]
+  );
+};
+
 const getEmployeesCount = async () => {
   const [rows] = await pool.query('SELECT COUNT(*) AS count FROM employees');
   return rows[0].count;
@@ -121,5 +148,6 @@ module.exports = {
   filterEmployees,
   addNewEmployee,
   deleteEmployee,
+  updateEmployee,
   getEmployeesCount,
 };
