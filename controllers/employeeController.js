@@ -3,7 +3,6 @@ const db = require('../models/queries');
 const renderEmployee = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-
     const filters = {
       employeeNumber: req.query.employeeNumber || '',
       firstName: req.query.firstName || '',
@@ -14,17 +13,26 @@ const renderEmployee = async (req, res) => {
       officeCode: req.query.officeCode || '',
       reportsTo: req.query.reportsTo || '',
     };
+    const isFiltering = Object.values(filters).some((v) => v);
+    let employees;
+    let totalItems;
 
-    const employees = Object.values(filters).some((v) => v)
-      ? await db.filterEmployees(filters)
-      : await db.getEmployeesByPage(page);
+    if (isFiltering) {
+      const filteredEmployees = await db.filterEmployees(filters);
+      totalItems = filteredEmployees.length;
 
-    const totalEmployees = employees.length;
-    const totalPages = Math.ceil(totalEmployees / 10);
+      const startIndex = (page - 1) * 10;
+      employees = filteredEmployees.slice(startIndex, startIndex + 10);
+    } else {
+      employees = await db.getEmployeesByPage(page);
+      totalItems = await db.getEmployeesCount();
+    }
+
+    const totalPages = Math.ceil(totalItems / 10);
 
     res.render('employee-page', {
       employees,
-      totalEmployees,
+      totalEmployees: totalItems,
       currentPage: page,
       totalPages,
       filters,
