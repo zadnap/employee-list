@@ -8,7 +8,12 @@ const renderEmployee = async (req, res) => {
     const totalEmployees = await db.getEmployeesCount();
     const totalPages = Math.ceil(totalEmployees / 10);
 
-    res.render('employee-page', { employees, currentPage: page, totalPages });
+    res.render('employee-page', {
+      employees,
+      totalEmployees,
+      currentPage: page,
+      totalPages,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send('Server error');
@@ -46,4 +51,20 @@ const addEmployee = async (req, res) => {
   }
 };
 
-module.exports = { renderEmployee, addEmployee };
+const deleteEmployee = async (req, res) => {
+  try {
+    const employeeNumber = parseInt(req.body.employeeNumber);
+    if (!employeeNumber) {
+      return res.status(400).send('Invalid employee number');
+    }
+
+    await db.deleteEmployee(employeeNumber);
+
+    res.redirect('/');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+};
+
+module.exports = { renderEmployee, addEmployee, deleteEmployee };
