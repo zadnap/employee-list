@@ -75,8 +75,16 @@ th {
   background-color: #f0f0f0;
   color: #333;
 }
+tr {
+  cursor: pointer;
+  transition: background-color ease 0.1s;
+}
 tr:nth-child(even) {
   background-color: #fafafa;
+}
+tbody tr:hover {
+  background-color: #ccc;
+  text-decoration: underline;
 }
 .page-navigation {
   display: flex;
@@ -96,4 +104,59 @@ tr:nth-child(even) {
   color: #999;
   font-size: 18px;
   margin-top: 40px;
+}
+
+.edit-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn ease 0.1s;
+}
+.edit-modal.open {
+  display: flex;
+}
+.modal-container {
+  background-color: #fff;
+  position: absolute;
+  border-radius: 5px;
+  width: 40%;
+}
+.modal-header {
+  background-color: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.modal-header h3 {
+  margin: 0;
+  font-size: 16px;
+}
+.modal-body {
+  padding: 10px;
+}
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.edit-form .submit-button {
+  align-self: self-end;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
 }
