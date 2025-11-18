@@ -109,8 +109,13 @@ const deleteEmployee = async (employeeNumber) => {
     await conn.beginTransaction();
 
     await conn.query(
+      `UPDATE customers SET salesRepEmployeeNumber = NULL WHERE salesRepEmployeeNumber = ?`,
+      employeeNumber
+    );
+
+    await conn.query(
       `UPDATE employees SET reportsTo = NULL WHERE reportsTo = ?`,
-      [employeeNumber]
+      employeeNumber
     );
 
     await conn.query(`DELETE FROM employees WHERE employeeNumber = ?`, [
