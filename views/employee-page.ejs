@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employees</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/employee-page.css" />
+  </head>
+  <body>
+    <h1 class="title">Employee List</h1>
+    <div class="container">
+      <div class="employee-container">
+        <% if (employees && employees.length > 0) { %>
+          <table>
+            <thead>
+              <tr>
+                <th><input type="checkbox" name="" id=""></th>
+                <th>No.</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Job Title</th>
+                <th>Email</th>
+                <th>Extension</th>
+                <th>Office Code</th>
+                <th>Reports To</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% employees.forEach(employee => { %>
+                <tr>
+                  <td><input type="checkbox" name="" id=""></td>
+                  <td><%= employee.employeeNumber %></td>
+                  <td><%= employee.firstName %></td>
+                  <td><%= employee.lastName %></td>
+                  <td><%= employee.jobTitle %></td>
+                  <td><%= employee.email %></td>
+                  <td><%= employee.extension || 'N/A' %></td>
+                  <td><%= employee.officeCode || 'N/A' %></td>
+                  <td><%= employee.reportsTo || 'N/A' %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        <% } else { %>
+          <div class="no-employees">No employees found.</div>
+        <% } %>
+        <div class="page-navigation">
+          <p class="current-page"><input class="page-input" type="number" value=""> / 15</p> 
+          <div class="button-group">
+            <button>Prev</button>
+            <button>Next</button>
+          </div>
+        </div>
+      </div>
+      <form class="add-form" action="/employees/add" method="POST">
+        <h2 class="form-title">New Employee</h2>
+        <div class="form-body">
+          <div class="form-field">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" required>
+          </div>
+          <div class="form-field">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" required>
+          </div>
+          <div class="form-field">
+            <label for="jobTitle">Job Title</label>
+            <input type="text" id="jobTitle" name="jobTitle" required>
+          </div>
+          <div class="form-field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          <div class="form-field">
+            <label for="extension">Extension</label>
+            <input type="text" id="extension" name="extension">
+          </div>
+          <div class="form-field">
+            <label for="officeCode">Office Code</label>
+            <input type="text" id="officeCode" name="officeCode">
+          </div>
+          <div class="form-field">
+            <label for="reportsTo">Reports To</label>
+            <input type="number" id="reportsTo" name="reportsTo">
+          </div>
+        </div>
+        <button type="submit" class="submit-button">Add Employee</button>
+      </form>
+    </div>
+  </body>
+</html>
