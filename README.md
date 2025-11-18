@@ -12,3 +12,7 @@ The goal of this project is to practice using MySQL database in a web applicatio
 ## Preview
 
 ![Preview](./preview.png)
+
+## Live Project
+
+[Employee List](https://employee-list-production-2c5c.up.railway.app/)
