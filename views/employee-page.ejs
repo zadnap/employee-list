@@ -119,10 +119,7 @@
         <div class="modal-body">
           <form class="edit-form" action="/update" method="POST">
             <div class="form-body">
-              <div class="form-field">
-                <label for="update-employeeNumber">Employee Number</label>
-                <input type="text" id="update-employeeNumber" name="employeeNumber" required>
-              </div>
+              <input type="hidden" id="update-employeeNumber" name="employeeNumber">
               <div class="form-field">
                 <label for="update-firstName">First Name</label>
                 <input type="text" id="update-firstName" name="firstName" required>
@@ -171,8 +168,9 @@
     rows.forEach(row => {
       row.addEventListener('click', () => {
         const cells = row.querySelectorAll('td');
-
-        form.querySelector('#update-employeeNumber').value = cells[0].textContent;
+        const employeeNumber = row.getAttribute('data-employee-number'); 
+        
+        form.querySelector('#update-employeeNumber').value = employeeNumber;
         form.querySelector('#update-firstName').value = cells[1].textContent;
         form.querySelector('#update-lastName').value = cells[2].textContent;
         form.querySelector('#update-jobTitle').value = cells[3].textContent;
@@ -198,12 +196,8 @@
     const deleteBtn = form.querySelector('button[type="button"]');
 
     deleteBtn.addEventListener('click', async () => {
-      const employeeNumber = form.querySelector('#update-employeeNumber').value;      
-
+      const employeeNumber = form.querySelector('#update-employeeNumber').value;
       if (!employeeNumber) return;
-
-      const confirmDelete = confirm("Are you sure you want to delete this employee?");
-      if (!confirmDelete) return;
 
       try {
         const response = await fetch('/delete', {
