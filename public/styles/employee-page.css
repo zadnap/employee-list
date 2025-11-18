@@ -11,10 +11,16 @@ body {
   align-items: flex-start;
   gap: 10px;
 }
+.title {
+  font-size: 25px;
+}
 
 button {
   padding: 5px 7px;
   cursor: pointer;
+}
+button:disabled {
+  cursor: auto;
 }
 input[type='number']::-webkit-outer-spin-button,
 input[type='number']::-webkit-inner-spin-button {
@@ -75,12 +81,18 @@ th {
   background-color: #f0f0f0;
   color: #333;
 }
-tr {
-  cursor: pointer;
-  transition: background-color ease 0.1s;
+.filter-row th {
+  padding: 5px;
+}
+.filter-row input {
+  width: calc(100% - 10px);
 }
 tr:nth-child(even) {
   background-color: #fafafa;
+}
+tbody tr {
+  cursor: pointer;
+  transition: background-color ease 0.1s;
 }
 tbody tr:hover {
   background-color: #ccc;
@@ -148,7 +160,7 @@ tbody tr:hover {
   flex-direction: column;
   gap: 15px;
 }
-.edit-form .submit-button {
+.edit-form .button-group {
   align-self: self-end;
 }
 
