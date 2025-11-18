@@ -53,7 +53,7 @@ const filterEmployees = async (filters = {}) => {
   return rows;
 };
 
-const addNewEmployee = async (
+const addNewEmployee = async ({
   employeeNumber,
   lastName,
   firstName,
@@ -61,8 +61,8 @@ const addNewEmployee = async (
   email,
   officeCode,
   reportsTo,
-  jobTitle
-) => {
+  jobTitle,
+}) => {
   await pool.query(
     `
       INSERT INTO employees (
@@ -74,7 +74,7 @@ const addNewEmployee = async (
         officeCode, 
         reportsTo, 
         jobTitle
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       employeeNumber,
       lastName,
