@@ -34,6 +34,9 @@ input[type='number'] {
   appearance: textfield;
 }
 
+.employee-container {
+  flex: 1;
+}
 .add-form {
   display: flex;
   flex-direction: column;
@@ -96,11 +99,11 @@ th {
 tr:nth-child(even) {
   background-color: #fafafa;
 }
-tbody tr {
+tbody tr:not(.no-results-row) {
   cursor: pointer;
   transition: background-color ease 0.1s;
 }
-tbody tr:hover {
+tbody tr:not(.no-results-row):hover {
   background-color: #ccc;
   text-decoration: underline;
 }

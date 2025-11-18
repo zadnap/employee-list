@@ -13,34 +13,34 @@
     <h1 class="title">Employee List (<%= totalEmployees %>)</h1>
     <div class="container">
       <div class="employee-container">
-        <% if (employees && employees.length > 0) { %>
-          <table>
-            <thead>
-              <tr>
-                <th>No.</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Job Title</th>
-                <th>Email</th>
-                <th>Extension</th>
-                <th>Office Code</th>
-                <th>Reports To</th>
-              </tr>
-              <tr class="filter-row">
-                <form action="/" method="get">
-                  <th><input type="text" name="employeeNumber" value="<%= filters.employeeNumber || '' %>"></th>
-                  <th><input type="text" name="firstName" value="<%= filters.firstName || '' %>"></th>
-                  <th><input type="text" name="lastName" value="<%= filters.lastName || '' %>"></th>
-                  <th><input type="text" name="jobTitle" value="<%= filters.jobTitle || '' %>"></th>
-                  <th><input type="text" name="email" value="<%= filters.email || '' %>"></th>
-                  <th><input type="text" name="extension" value="<%= filters.extension || '' %>"></th>
-                  <th><input type="text" name="officeCode" value="<%= filters.officeCode || '' %>"></th>
-                  <th><input type="text" name="reportsTo" value="<%= filters.reportsTo || '' %>"></th>
-                  <button type="submit" class="filter-btn">Filter</button>
-                </form>
-              </tr>
-            </thead>
-            <tbody>
+        <table>
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Job Title</th>
+              <th>Email</th>
+              <th>Extension</th>
+              <th>Office Code</th>
+              <th>Reports To</th>
+            </tr>
+            <tr class="filter-row">
+              <form action="/" method="get">
+                <th><input type="text" name="employeeNumber" value="<%= filters.employeeNumber || '' %>"></th>
+                <th><input type="text" name="firstName" value="<%= filters.firstName || '' %>"></th>
+                <th><input type="text" name="lastName" value="<%= filters.lastName || '' %>"></th>
+                <th><input type="text" name="jobTitle" value="<%= filters.jobTitle || '' %>"></th>
+                <th><input type="text" name="email" value="<%= filters.email || '' %>"></th>
+                <th><input type="text" name="extension" value="<%= filters.extension || '' %>"></th>
+                <th><input type="text" name="officeCode" value="<%= filters.officeCode || '' %>"></th>
+                <th><input type="text" name="reportsTo" value="<%= filters.reportsTo || '' %>"></th>
+                <button type="submit" class="filter-btn">Filter</button>
+              </form>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (employees && employees.length > 0) { %>
               <% employees.forEach(employee => { %>
                 <tr data-employee-number="<%= employee.employeeNumber %>">
                   <td><%= employee.employeeNumber %></td>
@@ -53,13 +53,17 @@
                   <td><%= employee.reportsTo || 'N/A' %></td>
                 </tr>
               <% }) %>
-            </tbody>
-          </table>
-        <% } else { %>
-          <div class="no-employees">No employees found.</div>
-        <% } %>
+            <% } else { %>
+              <tr class="no-results-row">
+                <td colspan="8" class="no-employees">
+                  No employees found.
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
         <div class="page-navigation">
-          <p class="current-page">Page <%= currentPage %> / <%= totalPages %></p> 
+          <p class="current-page">Page <%= totalPages === 0 ? 0 : currentPage + "/" + totalPages %></p> 
           <div class="button-group">
             <a href="?page=<%= currentPage - 1 %>">
               <button <%= currentPage === 1 ? 'disabled' : '' %>>Prev</button>
