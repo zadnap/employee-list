@@ -3,9 +3,23 @@ const db = require('../models/queries');
 const renderEmployee = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const employees = await db.getEmployeesByPage(page);
 
-    const totalEmployees = await db.getEmployeesCount();
+    const filters = {
+      employeeNumber: req.query.employeeNumber || '',
+      firstName: req.query.firstName || '',
+      lastName: req.query.lastName || '',
+      jobTitle: req.query.jobTitle || '',
+      email: req.query.email || '',
+      extension: req.query.extension || '',
+      officeCode: req.query.officeCode || '',
+      reportsTo: req.query.reportsTo || '',
+    };
+
+    const employees = Object.values(filters).some((v) => v)
+      ? await db.filterEmployees(filters)
+      : await db.getEmployeesByPage(page);
+
+    const totalEmployees = employees.length;
     const totalPages = Math.ceil(totalEmployees / 10);
 
     res.render('employee-page', {
@@ -13,6 +27,7 @@ const renderEmployee = async (req, res) => {
       totalEmployees,
       currentPage: page,
       totalPages,
+      filters,
     });
   } catch (err) {
     console.error(err);

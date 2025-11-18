@@ -18,6 +18,21 @@ const filterEmployees = async (filters = {}) => {
   const conditions = [];
   const values = [];
 
+  if (filters.employeeNumber) {
+    conditions.push(`employeeNumber LIKE ?`);
+    values.push(`%${filters.employeeNumber}%`);
+  }
+
+  if (filters.email) {
+    conditions.push(`email LIKE ?`);
+    values.push(`%${filters.email}%`);
+  }
+
+  if (filters.extension) {
+    conditions.push(`extension LIKE ?`);
+    values.push(`%${filters.extension}%`);
+  }
+
   if (filters.lastName) {
     conditions.push(`lastName LIKE ?`);
     values.push(`%${filters.lastName}%`);
@@ -29,18 +44,18 @@ const filterEmployees = async (filters = {}) => {
   }
 
   if (filters.jobTitle) {
-    conditions.push(`jobTitle = ?`);
-    values.push(filters.jobTitle);
+    conditions.push(`jobTitle LIKE ?`);
+    values.push(`%${filters.jobTitle}%`);
   }
 
   if (filters.officeCode) {
-    conditions.push(`officeCode = ?`);
-    values.push(filters.officeCode);
+    conditions.push(`officeCode LIKE ?`);
+    values.push(`%${filters.officeCode}%`);
   }
 
   if (filters.reportsTo) {
-    conditions.push(`reportsTo = ?`);
-    values.push(filters.reportsTo);
+    conditions.push(`reportsTo LIKE ?`);
+    values.push(`%${filters.reportsTo}%`);
   }
 
   if (conditions.length > 0) {

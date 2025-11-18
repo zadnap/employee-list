@@ -27,14 +27,17 @@
                 <th>Reports To</th>
               </tr>
               <tr class="filter-row">
-                <th><input type="text" id="filter-no"></th>
-                <th><input type="text" id="filter-first-name"></th>
-                <th><input type="text" id="filter-last-name"></th>
-                <th><input type="text" id="filter-job-title"></th>
-                <th><input type="text" id="filter-email"></th>
-                <th><input type="text" id="filter-extension"></th>
-                <th><input type="text" id="filter-office-code"></th>
-                <th><input type="text" id="filter-reports-to"></th>
+                <form action="/" method="get">
+                  <th><input type="text" name="employeeNumber" value="<%= filters.employeeNumber || '' %>"></th>
+                  <th><input type="text" name="firstName" value="<%= filters.firstName || '' %>"></th>
+                  <th><input type="text" name="lastName" value="<%= filters.lastName || '' %>"></th>
+                  <th><input type="text" name="jobTitle" value="<%= filters.jobTitle || '' %>"></th>
+                  <th><input type="text" name="email" value="<%= filters.email || '' %>"></th>
+                  <th><input type="text" name="extension" value="<%= filters.extension || '' %>"></th>
+                  <th><input type="text" name="officeCode" value="<%= filters.officeCode || '' %>"></th>
+                  <th><input type="text" name="reportsTo" value="<%= filters.reportsTo || '' %>"></th>
+                  <button type="submit" class="filter-btn">Filter</button>
+                </form>
               </tr>
             </thead>
             <tbody>
@@ -62,7 +65,7 @@
               <button <%= currentPage === 1 ? 'disabled' : '' %>>Prev</button>
             </a>
             <a href="?page=<%= currentPage + 1 %>">
-              <button <%= currentPage === totalPages ? 'disabled' : '' %>>Next</button>
+              <button <%= currentPage === totalPages || totalPages === 0 ? 'disabled' : '' %>>Next</button>
             </a>
           </div>
         </div>

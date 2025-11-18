@@ -84,6 +84,9 @@ th {
   background-color: #f0f0f0;
   color: #333;
 }
+.filter-btn {
+  display: none;
+}
 .filter-row th {
   padding: 5px;
 }
