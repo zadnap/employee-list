@@ -8,3 +8,7 @@ The project represents a simple list of employees and a list of offices, allowin
 - Updating an existing employee's information
 
 The goal of this project is to practice using MySQL database in a web application.
+
+## Preview
+
+![Preview](./preview.png)
