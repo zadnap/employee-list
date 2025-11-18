@@ -1,9 +1,18 @@
 const db = require('../models/queries');
 
 const renderEmployee = async (req, res) => {
-  const employees = await db.getEmployeesByPage();
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const employees = await db.getEmployeesByPage(page);
 
-  res.render('employee-page', { employees });
+    const totalEmployees = await db.getEmployeesCount();
+    const totalPages = Math.ceil(totalEmployees / 10);
+
+    res.render('employee-page', { employees, currentPage: page, totalPages });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
 };
 
 const addEmployee = async (req, res) => {

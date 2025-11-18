@@ -111,9 +111,15 @@ const deleteEmployee = async (employeeNumber) => {
   }
 };
 
+const getEmployeesCount = async () => {
+  const [rows] = await pool.query('SELECT COUNT(*) AS count FROM employees');
+  return rows[0].count;
+};
+
 module.exports = {
   getEmployeesByPage,
   filterEmployees,
   addNewEmployee,
   deleteEmployee,
+  getEmployeesCount,
 };
