@@ -2,67 +2,50 @@ const pool = require('./pool');
 
 const PAGE_SIZE = 10;
 
-const getEmployeesByPage = async (page = 1) => {
-  const offset = (page - 1) * PAGE_SIZE;
-
-  const [rows] = await pool.query(
-    'SELECT * FROM employees ORDER BY employeeNumber LIMIT ? OFFSET ?',
-    [PAGE_SIZE, offset]
-  );
-
-  return rows;
-};
-
-const filterEmployees = async (filters = {}) => {
-  let sql = `SELECT * FROM employees`;
+const buildFilterQuery = (filters = {}) => {
   const conditions = [];
   const values = [];
+  const filterFields = [
+    'employeeNumber',
+    'email',
+    'extension',
+    'lastName',
+    'firstName',
+    'jobTitle',
+    'officeCode',
+    'reportsTo',
+  ];
 
-  if (filters.employeeNumber) {
-    conditions.push(`employeeNumber LIKE ?`);
-    values.push(`%${filters.employeeNumber}%`);
-  }
+  filterFields.forEach((field) => {
+    if (filters[field]) {
+      conditions.push(`${field} LIKE ?`);
+      values.push(`%${filters[field]}%`);
+    }
+  });
 
-  if (filters.email) {
-    conditions.push(`email LIKE ?`);
-    values.push(`%${filters.email}%`);
-  }
+  const whereClause =
+    conditions.length > 0 ? ` WHERE ` + conditions.join(' AND ') : '';
 
-  if (filters.extension) {
-    conditions.push(`extension LIKE ?`);
-    values.push(`%${filters.extension}%`);
-  }
+  return { whereClause, values };
+};
 
-  if (filters.lastName) {
-    conditions.push(`lastName LIKE ?`);
-    values.push(`%${filters.lastName}%`);
-  }
+const getEmployeeCount = async (filters = {}) => {
+  const { whereClause, values } = buildFilterQuery(filters);
+  const sql = `SELECT COUNT(*) AS count FROM employees${whereClause}`;
+  const [rows] = await pool.query(sql, values);
 
-  if (filters.firstName) {
-    conditions.push(`firstName LIKE ?`);
-    values.push(`%${filters.firstName}%`);
-  }
+  return rows[0].count;
+};
 
-  if (filters.jobTitle) {
-    conditions.push(`jobTitle LIKE ?`);
-    values.push(`%${filters.jobTitle}%`);
-  }
+const getEmployees = async (page = 1, filters = {}) => {
+  const { whereClause, values } = buildFilterQuery(filters);
+  const offset = (page - 1) * PAGE_SIZE;
+  let sql = `SELECT * FROM employees${whereClause}`;
 
-  if (filters.officeCode) {
-    conditions.push(`officeCode LIKE ?`);
-    values.push(`%${filters.officeCode}%`);
-  }
+  sql += ` ORDER BY employeeNumber LIMIT ? OFFSET ?`;
 
-  if (filters.reportsTo) {
-    conditions.push(`reportsTo LIKE ?`);
-    values.push(`%${filters.reportsTo}%`);
-  }
-
-  if (conditions.length > 0) {
-    sql += ` WHERE ` + conditions.join(' AND ');
-  }
-
-  sql += ` ORDER BY employeeNumber`;
+  values.push(PAGE_SIZE);
+  values.push(offset);
 
   const [rows] = await pool.query(sql, values);
   return rows;
@@ -158,16 +141,11 @@ const updateEmployee = async ({
   );
 };
 
-const getEmployeesCount = async () => {
-  const [rows] = await pool.query('SELECT COUNT(*) AS count FROM employees');
-  return rows[0].count;
-};
-
 module.exports = {
-  getEmployeesByPage,
-  filterEmployees,
+  PAGE_SIZE,
+  getEmployeeCount,
+  getEmployees,
   addNewEmployee,
   deleteEmployee,
   updateEmployee,
-  getEmployeesCount,
 };

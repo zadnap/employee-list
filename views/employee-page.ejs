@@ -67,12 +67,21 @@
           </tbody>
         </table>
         <div class="page-navigation">
-          <p class="current-page">Page <%= totalPages === 0 ? 0 : currentPage + "/" + totalPages %></p> 
+          <% 
+            let filterParams = [];
+            for (const key in filters) { 
+              if (filters[key]) {
+                filterParams.push(`${key}=${encodeURIComponent(filters[key])}`);
+              }
+            }
+            const filterQuery = filterParams.length > 0 ? '&' + filterParams.join('&') : '';
+          %>
+          <p class="current-page">Page <%= totalPages === 0 ? 0 : currentPage + "/" + totalPages %></p>
           <div class="button-group">
-            <a href="?page=<%= currentPage - 1 %>">
+            <a href="?page=<%= currentPage - 1 %><%= filterQuery %>">
               <button <%= currentPage === 1 ? 'disabled' : '' %>>Prev</button>
             </a>
-            <a href="?page=<%= currentPage + 1 %>">
+            <a href="?page=<%= currentPage + 1 %><%= filterQuery %>">
               <button <%= currentPage === totalPages || totalPages === 0 ? 'disabled' : '' %>>Next</button>
             </a>
           </div>

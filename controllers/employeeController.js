@@ -18,17 +18,14 @@ const renderEmployee = async (req, res) => {
     let totalItems;
 
     if (isFiltering) {
-      const filteredEmployees = await db.filterEmployees(filters);
-      totalItems = filteredEmployees.length;
-
-      const startIndex = (page - 1) * 10;
-      employees = filteredEmployees.slice(startIndex, startIndex + 10);
+      employees = await db.getEmployees(page, filters);
+      totalItems = await db.getEmployeeCount(filters);
     } else {
-      employees = await db.getEmployeesByPage(page);
-      totalItems = await db.getEmployeesCount();
+      employees = await db.getEmployees(page);
+      totalItems = await db.getEmployeeCount();
     }
 
-    const totalPages = Math.ceil(totalItems / 10);
+    const totalPages = Math.ceil(totalItems / db.PAGE_SIZE);
 
     res.render('employee-page', {
       employees,
