@@ -40,6 +40,15 @@ const renderEmployee = async (req, res) => {
   }
 };
 
+const validateEmail = (email) => {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+};
+
+const validateNumber = (value) => {
+  return value !== undefined && value !== null && !isNaN(Number(value));
+};
+
 const addEmployee = async (req, res) => {
   try {
     const {
@@ -53,21 +62,46 @@ const addEmployee = async (req, res) => {
       reportsTo,
     } = req.body;
 
+    if (!employeeNumber || !validateNumber(employeeNumber)) {
+      return res.status(400).send('Invalid employee number');
+    }
+    if (!firstName || firstName.length > 50) {
+      return res.status(400).send('Invalid first name');
+    }
+    if (!lastName || lastName.length > 50) {
+      return res.status(400).send('Invalid last name');
+    }
+    if (!jobTitle || jobTitle.length > 50) {
+      return res.status(400).send('Invalid job title');
+    }
+    if (!email || !validateEmail(email) || email.length > 100) {
+      return res.status(400).send('Invalid email');
+    }
+    if (extension && extension.length > 10) {
+      return res.status(400).send('Extension too long');
+    }
+    if (officeCode && officeCode.length > 10) {
+      return res.status(400).send('Office code too long');
+    }
+    if (reportsTo && !validateNumber(reportsTo)) {
+      return res.status(400).send('reportsTo must be a number');
+    }
+
     await db.addNewEmployee({
-      employeeNumber,
+      employeeNumber: Number(employeeNumber),
       lastName,
       firstName,
       extension: extension || null,
       email,
       officeCode: officeCode || null,
-      reportsTo: reportsTo || null,
+      reportsTo: reportsTo ? Number(reportsTo) : null,
       jobTitle,
     });
 
     res.redirect('/');
   } catch (err) {
     console.error(err);
-    res.status(500).send('Invalid employee information');
+    res.status(500).send('Server error');
   }
 };
 
@@ -100,26 +134,46 @@ const updateEmployee = async (req, res) => {
       reportsTo,
     } = req.body;
 
-    if (!employeeNumber) {
+    if (!employeeNumber || !validateNumber(employeeNumber)) {
       return res.status(400).send('Invalid employee number');
     }
 
-    const updatedData = {
-      employeeNumber,
-      lastName,
-      firstName,
-      jobTitle,
-      email,
-    };
+    const updatedData = { employeeNumber };
 
-    if (extension !== '') {
-      updatedData.extension = extension;
+    if (firstName !== undefined) {
+      if (!firstName || firstName.length > 50)
+        return res.status(400).send('Invalid first name');
+      updatedData.firstName = firstName;
     }
-    if (officeCode !== '') {
-      updatedData.officeCode = officeCode;
+    if (lastName !== undefined) {
+      if (!lastName || lastName.length > 50)
+        return res.status(400).send('Invalid last name');
+      updatedData.lastName = lastName;
     }
-    if (reportsTo !== '') {
-      updatedData.reportsTo = reportsTo;
+    if (jobTitle !== undefined) {
+      if (!jobTitle || jobTitle.length > 50)
+        return res.status(400).send('Invalid job title');
+      updatedData.jobTitle = jobTitle;
+    }
+    if (email !== undefined) {
+      if (!email || !validateEmail(email) || email.length > 100)
+        return res.status(400).send('Invalid email');
+      updatedData.email = email;
+    }
+    if (extension !== undefined) {
+      if (extension.length > 10)
+        return res.status(400).send('Extension too long');
+      updatedData.extension = extension || null;
+    }
+    if (officeCode !== undefined) {
+      if (officeCode.length > 10)
+        return res.status(400).send('Office code too long');
+      updatedData.officeCode = officeCode || null;
+    }
+    if (reportsTo !== undefined) {
+      if (reportsTo && !validateNumber(reportsTo))
+        return res.status(400).send('reportsTo must be a number');
+      updatedData.reportsTo = reportsTo ? Number(reportsTo) : null;
     }
 
     await db.updateEmployee(updatedData);
