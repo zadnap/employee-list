@@ -114,31 +114,53 @@ const deleteEmployee = async (employeeNumber) => {
   }
 };
 
-const updateEmployee = async ({
-  employeeNumber,
-  lastName,
-  firstName,
-  extension,
-  email,
-  officeCode,
-  reportsTo,
-  jobTitle,
-}) => {
-  await pool.query(
-    `UPDATE employees
-     SET lastName = ?, firstName = ?, extension = ?, email = ?, officeCode = ?, reportsTo = ?, jobTitle = ?
-     WHERE employeeNumber = ?`,
-    [
-      lastName,
-      firstName,
-      extension,
-      email,
-      officeCode,
-      reportsTo,
-      jobTitle,
-      employeeNumber,
-    ]
-  );
+const updateEmployee = async (employeeData) => {
+  const {
+    employeeNumber,
+    lastName,
+    firstName,
+    extension,
+    email,
+    officeCode,
+    reportsTo,
+    jobTitle,
+  } = employeeData;
+
+  const fields = {
+    lastName,
+    firstName,
+    extension,
+    email,
+    officeCode,
+    reportsTo,
+    jobTitle,
+  };
+
+  const setClauses = [];
+  const values = [];
+
+  Object.entries(fields).forEach(([key, value]) => {
+    if (value !== undefined) {
+      setClauses.push(`${key} = ?`);
+      values.push(value);
+    }
+  });
+
+  if (setClauses.length === 0) {
+    return;
+  }
+
+  const sql = `
+    UPDATE employees
+    SET ${setClauses.join(', ')}
+    WHERE employeeNumber = ?
+  `;
+
+  values.push(employeeNumber);
+
+  console.log(sql);
+
+  await pool.query(sql, values);
 };
 
 module.exports = {

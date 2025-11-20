@@ -181,6 +181,7 @@
     const modal = document.querySelector('.edit-modal');
     const closeBtn = modal.querySelector('.close-btn');
     const form = modal.querySelector('.edit-form');
+    const fields = ['firstName', 'lastName', 'jobTitle', 'email', 'extension', 'officeCode', 'reportsTo'];
 
     rows.forEach(row => {
       row.addEventListener('click', () => {
@@ -188,13 +189,15 @@
         const employeeNumber = row.getAttribute('data-employee-number'); 
         
         form.querySelector('#update-employeeNumber').value = employeeNumber;
-        form.querySelector('#update-firstName').value = cells[1].textContent;
-        form.querySelector('#update-lastName').value = cells[2].textContent;
-        form.querySelector('#update-jobTitle').value = cells[3].textContent;
-        form.querySelector('#update-email').value = cells[4].textContent;
-        form.querySelector('#update-extension').value = cells[5].textContent !== 'N/A' ? cells[5].textContent : '';
-        form.querySelector('#update-officeCode').value = cells[6].textContent !== 'N/A' ? cells[6].textContent : '';
-        form.querySelector('#update-reportsTo').value = cells[7].textContent !== 'N/A' ? cells[7].textContent : '';
+        fields.forEach((field, index) => {
+          let value = cells[index + 1].textContent;
+          if (value === 'N/A') {
+            value = '';
+          }
+          const input = form.querySelector(`#update-${field}`);
+          input.value = value;
+          input.dataset.original = value;
+        });
 
         modal.classList.add("open");
       });
@@ -235,6 +238,15 @@
         console.error(err);
         alert("Server error");
       }
+    });
+
+    form.addEventListener('submit', (e) => {
+      fields.forEach(field => {
+        const input = form.querySelector(`#update-${field}`);
+        if (input.value === input.dataset.original) {
+          input.removeAttribute('name');
+        }
+      });
     });
   </script>
 </html>

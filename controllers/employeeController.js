@@ -104,16 +104,25 @@ const updateEmployee = async (req, res) => {
       return res.status(400).send('Invalid employee number');
     }
 
-    await db.updateEmployee({
+    const updatedData = {
       employeeNumber,
       lastName,
       firstName,
-      extension: extension || null,
-      email,
-      officeCode: officeCode || null,
-      reportsTo: reportsTo || null,
       jobTitle,
-    });
+      email,
+    };
+
+    if (extension !== '') {
+      updatedData.extension = extension;
+    }
+    if (officeCode !== '') {
+      updatedData.officeCode = officeCode;
+    }
+    if (reportsTo !== '') {
+      updatedData.reportsTo = reportsTo;
+    }
+
+    await db.updateEmployee(updatedData);
 
     res.redirect('/');
   } catch (err) {
